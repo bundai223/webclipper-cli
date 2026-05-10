@@ -1,0 +1,24 @@
+{
+  "name": "webclip-url",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "webclip": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clip": "node --import tsx src/cli.ts",
+    "clip:amazon": "node --import tsx src/cli.ts --template fixtures/amazon-book-template.json --json 'https://www.amazon.co.jp/Agentic-Coding-%E7%94%9F%E6%88%90AI%E6%99%82%E4%BB%A3%E3%81%AE%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E9%96%8B%E7%99%BA%E5%85%A5%E9%96%80-%E6%B8%A1%E9%82%89-%E6%B4%8B%E5%B9%B3/dp/4815636591'",
+    "compare:amazon": "node --import tsx src/cli.ts --template fixtures/amazon-book-template.json --output generated/amazon-book.md --expected '../../Fleeting notes/Agentic Coding　生成AI時代のシステム開発入門.md' 'https://www.amazon.co.jp/Agentic-Coding-%E7%94%9F%E6%88%90AI%E6%99%82%E4%BB%A3%E3%81%AE%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E9%96%8B%E7%99%BA%E5%85%A5%E9%96%80-%E6%B8%A1%E9%82%89-%E6%B4%8B%E5%B9%B3/dp/4815636591'"
+  },
+  "dependencies": {
+    "defuddle": "^0.18.1",
+    "linkedom": "^0.18.12"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
