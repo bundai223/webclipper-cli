@@ -1,0 +1,22 @@
+{
+  "name": "config-selector",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "bin": {
+    "config-selector": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "../webclip-url/node_modules/.bin/tsc -p tsconfig.json",
+    "select": "node --import ../webclip-url/node_modules/tsx/dist/loader.mjs src/cli.ts",
+    "test": "npm run build && node --test dist/**/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.0",
+    "typescript": "^5.9.3"
+  }
+}
