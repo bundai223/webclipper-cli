@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <markdown-file>" >&2
+  exit 1
+fi
+
+perl -0ne '
+  s/!?\[[^\]\n]*\]\(\s*https?:\/\/(?:[^()\s]+|\([^)\n]*\))*\s*(?:["'\''][^"'\'']*["'\''])?\s*\)//g;
+  s/^\s*\[[^\]\n]+]:\s*https?:\/\/\S+//mg;
+  s/<https?:\/\/[^>\s]+>//g;
+  s/\[\[[^\]\n]*https?:\/\/[^\]\n]*\]\]//g;
+
+  while (m{\bhttps?://[^\s<>"'\''`]+}g) {
+    my $url = $&;
+    $url =~ s/[.,;:!?]+$//;
+    while ($url =~ /[)\]}]$/) {
+      my $close = substr($url, -1);
+      my $open = $close eq ")" ? "(" : $close eq "]" ? "[" : "{";
+      my $quoted_close = quotemeta($close);
+      my $quoted_open = quotemeta($open);
+      my $close_count = () = $url =~ /$quoted_close/g;
+      my $open_count = () = $url =~ /$quoted_open/g;
+      last if $close_count <= $open_count;
+      chop $url;
+    }
+    print "$url\n";
+  }
+' "$1"
