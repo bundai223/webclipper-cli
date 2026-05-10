@@ -10,7 +10,7 @@ export type ConfigCandidate = {
   config: WebClipperConfig;
 };
 
-export type TriggerMatchKind = "exact" | "prefix" | "glob" | "regex";
+export type TriggerMatchKind = "exact" | "prefix" | "glob" | "regex" | "fallback";
 
 export type TriggerMatch = {
   trigger: string;

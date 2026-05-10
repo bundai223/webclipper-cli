@@ -94,6 +94,8 @@ function kindWeight(kind: TriggerMatchKind): number {
       return 20_000;
     case "prefix":
       return 10_000;
+    case "fallback":
+      return 0;
   }
 }
 

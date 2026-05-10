@@ -14,6 +14,7 @@ Obsidian Web Clipper の config には `triggers` が含まれているため、
 - 複数の Web Clipper config JSON を読み込む
 - 各 config の `triggers` と入力 URL を照合する
 - 一致する config のうち、最も適したものを 1 つ選ぶ
+- 一致する config がない場合に、明示された fallback config を選べるようにする
 - CLI と library API の両方から利用できるようにする
 
 ## 非目的
@@ -45,6 +46,14 @@ config は少なくとも次の形を想定する。
 ```
 
 `triggers` がない config は選択対象にならない。
+
+### Fallback Config
+
+CLI では `--fallback <config-json>` により fallback config を 1 つ指定できる。
+通常の `triggers` に一致する config がない場合のみ fallback config を選ぶ。
+
+fallback config は trigger match の対象にはしない。
+選択時の match kind は `fallback`、score は `0` とする。
 
 ## Trigger の解釈
 
@@ -108,6 +117,7 @@ score は match 種別の重みと具体性を足して計算する。
 | glob | 30000 |
 | regex | 20000 |
 | prefix | 10000 |
+| fallback | 0 |
 
 具体性は、trigger から正規表現や glob の記号を除いた文字数で評価する。
 prefix と exact は trigger の長さを具体性として使う。
@@ -117,22 +127,30 @@ prefix と exact は trigger の長さを具体性として使う。
 ### 基本形
 
 ```bash
-config-selector [--configs <dir-or-json>] [--json|--path|--all] <url>
+config-selector [--configs <dir-or-json>] [--fallback <config-json>] [--json|--match-json|--all] <url>
 ```
 
 ### Options
 
 - `--configs <dir-or-json>`: config を探索するディレクトリまたは JSON ファイル。複数回指定できる
 - `--config-dir <dir-or-json>`: `--configs` の alias
+- `--fallback <config-json>`: match しなかった場合に選ぶ config JSON
 - `--json`: 選択された config JSON の内容を出力する
-- `--path`: 選択された config JSON の path だけを出力する
+- `--path`: 後方互換用。通常出力と同じく、選択された config JSON の path だけを出力する
+- `--match-json`: 選択された config の metadata と match 情報を JSON で出力する
 - `--all`: 一致した候補を score 順にすべて出力する
 
 `--configs` が指定されない場合は、既定で `../webclip-url/fixtures` を探索する。
 
 ### 出力
 
-通常出力は、選択された config の metadata と match 情報を JSON で返す。
+通常出力は、bash pipeline や command substitution で扱いやすいように、選択された config JSON の path だけを 1 行で返す。
+
+```text
+/path/to/zenn-clipper.json
+```
+
+match 情報が必要な場合は `--match-json` を使う。
 
 ```json
 {
@@ -144,7 +162,30 @@ config-selector [--configs <dir-or-json>] [--json|--path|--all] <url>
 }
 ```
 
-一致する config がない場合は stderr に error message を出し、exit code を `1` にする。
+一致する config がなく、`--fallback` が指定されている場合は fallback config の path を出力し、exit code を `0` にする。
+一致する config がなく、fallback もない場合は stderr に error message を出し、exit code を `1` にする。
+
+### Pipeline Usage
+
+選択された path を `webclip-url` へ渡す例:
+
+```bash
+template=$(npm run --silent select -- \
+  --fallback ../webclip-url/fixtures/default-clipper.json \
+  'https://zenn.dev/example/articles/hello')
+
+cd ../webclip-url
+npm run clip -- --template "$template" 'https://zenn.dev/example/articles/hello'
+```
+
+`xargs` でつなぐ例:
+
+```bash
+npm run --silent select -- \
+  --fallback ../webclip-url/fixtures/default-clipper.json \
+  'https://zenn.dev/example/articles/hello' \
+  | xargs -I{} npm --prefix ../webclip-url run clip -- --template "{}" 'https://zenn.dev/example/articles/hello'
+```
 
 ## Library API
 
@@ -165,12 +206,14 @@ config-selector [--configs <dir-or-json>] [--json|--path|--all] <url>
 - `https://memo.hatenadiary.jp/entry/hello` は `/^https:\/\/.*.hatenadiary\.jp\/.*$/` に regex match する
 - prefix と glob が両方一致する場合、glob の config を優先する
 - 一致する config がない場合は `undefined` を返す library API と、失敗する CLI の両方を提供する
+- 一致する config がなく `--fallback` が指定されている場合、CLI は fallback config path を stdout に出す
+- 通常 CLI 出力は config path だけにし、後続コマンドへ渡しやすくする
+- match metadata は `--match-json` で確認できる
 - `npm test` で matching rule の主要ケースを検証できる
 
 ## 今後の拡張余地
 
 - config schema validation を追加する
-- default config を fallback として明示指定できるようにする
 - trigger の優先順位を config 側で上書きできるようにする
 - `webclip-url` CLI に `--auto-template` のような option を追加し、selector を内部利用する
 - URL 正規化を入れ、末尾 slash や tracking query の影響を抑える

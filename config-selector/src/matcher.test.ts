@@ -57,3 +57,20 @@ test("returns undefined when no trigger matches", () => {
 
   assert.equal(selected, undefined);
 });
+
+test("exact matches outrank prefix matches", () => {
+  const candidates: ConfigCandidate[] = [
+    {
+      path: "/configs/prefix.json",
+      config: { name: "Prefix", triggers: ["https://example.com/"] },
+    },
+    {
+      path: "/configs/exact.json",
+      config: { name: "Exact", triggers: ["https://example.com/page"] },
+    },
+  ];
+
+  const selected = selectConfig("https://example.com/page", candidates);
+
+  assert.equal(selected?.config.name, "Exact");
+});

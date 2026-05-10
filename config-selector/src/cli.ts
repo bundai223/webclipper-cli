@@ -3,10 +3,13 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadConfigCandidates } from "./config-loader.js";
 import { findConfigMatches, selectConfig } from "./matcher.js";
+import type { ConfigMatch } from "./types.js";
 
 type CliArgs = {
   configPaths: string[];
+  fallback?: string;
   json: boolean;
+  matchJson: boolean;
   pathOnly: boolean;
   all: boolean;
   url?: string;
@@ -16,14 +19,15 @@ async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
 
   if (!args.url) {
-    throw new Error("Usage: config-selector [--configs <dir-or-json>] [--json|--path|--all] <url>");
+    throw new Error("Usage: config-selector [--configs <dir-or-json>] [--fallback <config-json>] [--json|--match-json|--all] <url>");
   }
 
   const configPaths = args.configPaths.length > 0
     ? args.configPaths
     : [defaultConfigDirectory()];
   const candidates = await loadConfigCandidates(configPaths);
-  const selected = selectConfig(args.url, candidates);
+  const selected = selectConfig(args.url, candidates)
+    ?? await loadFallbackConfig(args.fallback);
 
   if (args.all) {
     process.stdout.write(`${JSON.stringify(findConfigMatches(args.url, candidates).map(formatMatch), null, 2)}\n`);
@@ -39,18 +43,19 @@ async function main(): Promise<void> {
     return;
   }
 
-  if (args.pathOnly) {
-    process.stdout.write(`${selected.path}\n`);
+  if (args.matchJson) {
+    process.stdout.write(`${JSON.stringify(formatMatch(selected), null, 2)}\n`);
     return;
   }
 
-  process.stdout.write(`${JSON.stringify(formatMatch(selected), null, 2)}\n`);
+  process.stdout.write(`${selected.path}\n`);
 }
 
 function parseArgs(rawArgs: string[]): CliArgs {
   const args: CliArgs = {
     configPaths: [],
     json: false,
+    matchJson: false,
     pathOnly: false,
     all: false,
   };
@@ -63,8 +68,14 @@ function parseArgs(rawArgs: string[]): CliArgs {
       case "--config-dir":
         args.configPaths.push(requiredValue(rawArgs, ++index, arg));
         break;
+      case "--fallback":
+        args.fallback = requiredValue(rawArgs, ++index, arg);
+        break;
       case "--json":
         args.json = true;
+        break;
+      case "--match-json":
+        args.matchJson = true;
         break;
       case "--path":
         args.pathOnly = true;
@@ -100,7 +111,28 @@ function defaultConfigDirectory(): string {
   return resolve(cliDirectory, "../../webclip-url/fixtures");
 }
 
-function formatMatch(match: ReturnType<typeof selectConfig> extends infer T ? NonNullable<T> : never): object {
+async function loadFallbackConfig(path: string | undefined): Promise<ConfigMatch | undefined> {
+  if (!path) {
+    return undefined;
+  }
+
+  const [fallback] = await loadConfigCandidates([path]);
+
+  if (!fallback) {
+    throw new Error(`Fallback config is not a readable JSON config: ${path}`);
+  }
+
+  return {
+    ...fallback,
+    match: {
+      trigger: "<fallback>",
+      kind: "fallback",
+      score: 0,
+    },
+  };
+}
+
+function formatMatch(match: ConfigMatch): object {
   return {
     path: match.path,
     name: match.config.name,
