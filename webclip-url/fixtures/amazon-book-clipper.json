@@ -1,0 +1,63 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Amazon Book",
+	"behavior": "create",
+	"noteContentFormat": "- [Amazon](https://www.amazon.co.jp/exec/obidos/ASIN/{{selector:#ASIN?value|first}})\n\n![|300]({{selector:img#landingImage?src}})\n\n## メモ\n\n## 感想\n\n## Links\n\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{selector:#productTitle}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{selector:#productTitle}}を読む",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "book",
+			"type": "multitext"
+		},
+		{
+			"name": "status",
+			"value": "backlog",
+			"type": "text"
+		},
+		{
+			"name": "store",
+			"value": "kindle",
+			"type": "text"
+		},
+		{
+			"name": "media",
+			"value": "app",
+			"type": "text"
+		},
+		{
+			"name": "著者",
+			"value": "{{selector:.author .a-link-normal | join }}",
+			"type": "multitext"
+		},
+		{
+			"name": "出版社",
+			"value": "{{selector:#rpi-attribute-book_details-publisher .rpi-attribute-value}}",
+			"type": "text"
+		},
+		{
+			"name": "出版日",
+			"value": "{{selector:#rpi-attribute-book_details-publication_date .rpi-attribute-value}}",
+			"type": "text"
+		},
+		{
+			"name": "image",
+			"value": "{{selector:img#landingImage?src}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://www.amazon.co.jp/"
+	],
+	"noteNameFormat": "{{selector:#productTitle}}",
+	"path": "Fleeting Notes"
+}

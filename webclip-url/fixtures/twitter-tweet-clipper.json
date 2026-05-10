@@ -1,0 +1,53 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Twitter tweet",
+	"behavior": "create",
+	"noteContentFormat": "![]({{selector:img[alt=\"画像\"]?src|first}})\n\n{{selectorHtml:article  div.public-DraftEditor-content|markdown}}",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{selector:[data-testid=\\\"twitter-article-title\\\"] > span}}",
+			"type": "text"
+		},
+		{
+			"name": "source",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "author",
+			"value": "{{url|split:\\\"/\\\"|slice:3,-2}}",
+			"type": "multitext"
+		},
+		{
+			"name": "published",
+			"value": "{{published}}",
+			"type": "date"
+		},
+		{
+			"name": "created",
+			"value": "{{date}}",
+			"type": "date"
+		},
+		{
+			"name": "description",
+			"value": "{{title}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "clippings,ingest-pending",
+			"type": "multitext"
+		},
+		{
+			"name": "image",
+			"value": "{{selector:img[alt=\\\"画像\\\"]?src|first}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://x.com"
+	],
+	"noteNameFormat": "{{selector:[data-testid=\"twitter-article-title\"] > span}}",
+	"path": "Literature Notes/raw/posts/"
+}
