@@ -13,6 +13,7 @@ config_dir="${3:-$script_dir/webclip-url/fixtures}"
 fallback_config="${FALLBACK_CONFIG:-$script_dir/webclip-url/fixtures/default-clipper.json}"
 base_delay="${BACKOFF_BASE_SECONDS:-2}"
 max_delay="${BACKOFF_MAX_SECONDS:-60}"
+tsx_loader="$script_dir/webclip-url/node_modules/tsx/dist/loader.mjs"
 
 slugify_url() {
   printf '%s' "$1" |
@@ -52,7 +53,7 @@ while IFS= read -r url; do
   printf '[%d/%d] %s\n' "$index" "$total" "$url" >&2
 
   if ! config="$(
-    node "$script_dir/config-selector/dist/cli.js" \
+    node --import "$tsx_loader" "$script_dir/config-selector/src/cli.ts" \
       --configs "$config_dir" \
       --fallback "$fallback_config" \
       "$url"
@@ -62,7 +63,7 @@ while IFS= read -r url; do
   else
     output_file="$output_dir/$(printf '%04d' "$index")-$(slugify_url "$url").md"
 
-    if node "$script_dir/webclip-url/dist/cli.js" \
+    if node --import "$tsx_loader" "$script_dir/webclip-url/src/cli.ts" \
       --template "$config" \
       --output "$output_file" \
       "$url" >/dev/null; then
