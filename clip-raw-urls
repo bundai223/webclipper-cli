@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+  echo "Usage: $0 <markdown-file> <output-dir> [config-dir]" >&2
+  exit 1
+fi
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+markdown_file="$1"
+output_dir="$2"
+config_dir="${3:-$script_dir/webclip-url/fixtures}"
+fallback_config="${FALLBACK_CONFIG:-$script_dir/webclip-url/fixtures/default-clipper.json}"
+base_delay="${BACKOFF_BASE_SECONDS:-2}"
+max_delay="${BACKOFF_MAX_SECONDS:-60}"
+tsx_loader="$script_dir/webclip-url/node_modules/tsx/dist/loader.mjs"
+
+slugify_url() {
+  printf '%s' "$1" |
+    sed -E 's#^https?://##; s#[^A-Za-z0-9._-]+#-#g; s#^-+##; s#-+$##' |
+    cut -c 1-120
+}
+
+next_delay() {
+  local current="$1"
+  local max="$2"
+  local next=$((current * 2))
+
+  if [ "$next" -gt "$max" ]; then
+    printf '%s\n' "$max"
+    return
+  fi
+
+  printf '%s\n' "$next"
+}
+
+mkdir -p "$output_dir"
+url_file="$(mktemp)"
+trap 'rm -f "$url_file"' EXIT
+"$script_dir/list-raw-urls" "$markdown_file" > "$url_file"
+total="$(wc -l < "$url_file" | tr -d ' ')"
+
+if [ "$total" -eq 0 ]; then
+  echo "No raw URLs found: $markdown_file" >&2
+  exit 0
+fi
+
+delay="$base_delay"
+index=1
+status=0
+
+while IFS= read -r url; do
+  printf '[%d/%d] %s\n' "$index" "$total" "$url" >&2
+
+  if ! config="$(
+    node --import "$tsx_loader" "$script_dir/config-selector/src/cli.ts" \
+      --configs "$config_dir" \
+      --fallback "$fallback_config" \
+      "$url"
+  )"; then
+    printf 'failed to select config: %s\n' "$url" >&2
+    status=1
+  else
+    output_file="$output_dir/$(printf '%04d' "$index")-$(slugify_url "$url").md"
+
+    if node --import "$tsx_loader" "$script_dir/webclip-url/src/cli.ts" \
+      --template "$config" \
+      --output "$output_file" \
+      "$url" >/dev/null; then
+      printf 'saved: %s\n' "$output_file" >&2
+    else
+      printf 'failed to clip: %s\n' "$url" >&2
+      status=1
+    fi
+  fi
+
+  if [ "$index" -lt "$total" ]; then
+    printf 'sleep: %ss\n' "$delay" >&2
+    sleep "$delay"
+    delay="$(next_delay "$delay" "$max_delay")"
+  fi
+
+  index=$((index + 1))
+done < "$url_file"
+
+exit "$status"
