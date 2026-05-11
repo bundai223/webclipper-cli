@@ -1,0 +1,63 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "達人出版会",
+	"behavior": "create",
+	"noteContentFormat": "- [達人出版会]({{url}})\n\n![|300](https://tatsu-zine.com{{selector:div.bookimage img?src}})\n\n## メモ\n\n## 感想\n\n## Links\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{selector:h1[itemprop='name']}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{selector:h1[itemprop='name']}}",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "book",
+			"type": "multitext"
+		},
+		{
+			"name": "status",
+			"value": "backlog",
+			"type": "text"
+		},
+		{
+			"name": "store",
+			"value": "達人出版会",
+			"type": "text"
+		},
+		{
+			"name": "media",
+			"value": "book",
+			"type": "text"
+		},
+		{
+			"name": "著者",
+			"value": "{{selector:p[itemprop='author']}}",
+			"type": "multitext"
+		},
+		{
+			"name": "出版社",
+			"value": "{{selector:p.publisher a}}",
+			"type": "text"
+		},
+		{
+			"name": "出版日",
+			"value": "{{selector:span[itemprop='datePublished']}}",
+			"type": "text"
+		},
+		{
+			"name": "image",
+			"value": "https://tatsu-zine.com{{selector:div.bookimage img?src}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://tatsu-zine.com/"
+	],
+	"noteNameFormat": "{{selector:h1[itemprop='name']}}",
+	"path": "Fleeting Notes"
+}

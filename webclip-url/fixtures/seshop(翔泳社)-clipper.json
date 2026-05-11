@@ -1,0 +1,68 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "SEshop(翔泳社)",
+	"behavior": "create",
+	"noteContentFormat": "- [SEshop]({{url}})\n\n![|300]({{image}})\n\n## メモ\n\n## 感想\n\n## Links\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{title}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{title}}",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "book",
+			"type": "multitext"
+		},
+		{
+			"name": "status",
+			"value": "backlog",
+			"type": "text"
+		},
+		{
+			"name": "store",
+			"value": "SEshop",
+			"type": "text"
+		},
+		{
+			"name": "media",
+			"value": "book",
+			"type": "text"
+		},
+		{
+			"name": "著者",
+			"value": "{{author}}",
+			"type": "multitext"
+		},
+		{
+			"name": "出版社",
+			"value": "翔泳社",
+			"type": "text"
+		},
+		{
+			"name": "出版日",
+			"value": "{{meta:name:cxenseparse:sho-releasedate}}",
+			"type": "text"
+		},
+		{
+			"name": "ISBN",
+			"value": "{{meta:name:cxenseparse:sho-isbn}}",
+			"type": "text"
+		},
+		{
+			"name": "image",
+			"value": "{{image}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://seshop.com/product/"
+	],
+	"noteNameFormat": "{{title}}",
+	"path": "Fleeting Notes"
+}

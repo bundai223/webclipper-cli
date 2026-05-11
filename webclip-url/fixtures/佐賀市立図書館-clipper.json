@@ -1,0 +1,63 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "佐賀市立図書館",
+	"behavior": "create",
+	"noteContentFormat": "- [市立図書館]({{url}})\n\n![]({{selector:#bookCover > img?src}})\n\n## メモ\n\n## 感想\n\n## Links\n\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{selector:table.tbl-04 td|slice:1,2}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{selector:table.tbl-04 td|slice:1,2}}を読む",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "book",
+			"type": "multitext"
+		},
+		{
+			"name": "status",
+			"value": "backlog",
+			"type": "text"
+		},
+		{
+			"name": "store",
+			"value": "佐賀市立図書館",
+			"type": "text"
+		},
+		{
+			"name": "media",
+			"value": "book",
+			"type": "text"
+		},
+		{
+			"name": "著者",
+			"value": "{{selector:table.tbl-04 td|slice:3,4}}",
+			"type": "multitext"
+		},
+		{
+			"name": "出版社",
+			"value": "{{selector:table.tbl-04 td|slice:5,6}}",
+			"type": "text"
+		},
+		{
+			"name": "出版日",
+			"value": "{{selector:table.tbl-04 td|slice:6,7}}",
+			"type": "text"
+		},
+		{
+			"name": "image",
+			"value": "{{selector:#bookCover > img?src}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://www2.lib.saga.saga.jp/"
+	],
+	"noteNameFormat": "{{selector:table.tbl-04 td|slice:1,2}}",
+	"path": "Fleeting Notes"
+}

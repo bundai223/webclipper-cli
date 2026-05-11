@@ -1,0 +1,63 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Gihyo Digital Publishing",
+	"behavior": "create",
+	"noteContentFormat": "- [gihyo]({{url}})\n\n![|300]({{selector:aside#bookCover img?src}})\n\n## メモ\n\n## 感想\n\n## Links\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{selector:h1#bookTitle}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{selector:h1#bookTitle}}",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "book",
+			"type": "multitext"
+		},
+		{
+			"name": "status",
+			"value": "backlog",
+			"type": "text"
+		},
+		{
+			"name": "store",
+			"value": "gihyo",
+			"type": "text"
+		},
+		{
+			"name": "media",
+			"value": "epub",
+			"type": "text"
+		},
+		{
+			"name": "著者",
+			"value": "{{selector:dl#publicationData dd[itemprop='author']}}",
+			"type": "multitext"
+		},
+		{
+			"name": "出版社",
+			"value": "技術評論社",
+			"type": "text"
+		},
+		{
+			"name": "出版日",
+			"value": "{{selector:dl#publicationData dd time|slice:0,1}}",
+			"type": "text"
+		},
+		{
+			"name": "image",
+			"value": "{{selector:aside#bookCover img?src}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://gihyo.jp/dp/ebook/"
+	],
+	"noteNameFormat": "{{selector:h1#bookTitle}}",
+	"path": "Fleeting Notes"
+}

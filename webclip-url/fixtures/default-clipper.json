@@ -2,7 +2,7 @@
 	"schemaVersion": "0.1.0",
 	"name": "Default",
 	"behavior": "create",
-	"noteContentFormat": "{{content}}",
+	"noteContentFormat": "{{content}}\n\n## Links\n\n- [元記事]({{url}})",
 	"properties": [
 		{
 			"name": "title",
@@ -40,9 +40,7 @@
 			"type": "multitext"
 		}
 	],
-	"triggers": [
-		"/^https:\\/\\/.*.hatenadiary\\.jp\\/.*$/"
-	],
+	"triggers": [],
 	"noteNameFormat": "{{title}}",
 	"path": "Literature Notes/raw/posts/"
 }

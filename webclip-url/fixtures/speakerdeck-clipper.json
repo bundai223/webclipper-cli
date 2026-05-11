@@ -1,8 +1,8 @@
 {
 	"schemaVersion": "0.1.0",
-	"name": "Zenn",
+	"name": "SpeakerDeck",
 	"behavior": "create",
-	"noteContentFormat": "{{content}}",
+	"noteContentFormat": "{{selectorHtml:#transcript|markdown}}",
 	"properties": [
 		{
 			"name": "title",
@@ -41,7 +41,7 @@
 		}
 	],
 	"triggers": [
-		"https://zenn.dev/*/articles/*"
+		"https://speakerdeck.com/.*/.*"
 	],
 	"noteNameFormat": "{{title}}",
 	"path": "Literature Notes/raw/posts/"

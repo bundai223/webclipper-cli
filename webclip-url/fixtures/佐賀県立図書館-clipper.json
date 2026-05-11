@@ -1,0 +1,63 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "佐賀県立図書館",
+	"behavior": "create",
+	"noteContentFormat": "- [県立図書館]({{url}})\n\n![|300](https://www2.tosyo-saga.jp/{{selector:.lyt-image.report.state.hook-tag img?src}})\n\n## メモ\n\n## 感想\n\n## Links\n\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{selector:table.tbl-04 td|slice:0,1}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{selector:table.tbl-04 td|slice:0,1}}を読む",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "book",
+			"type": "multitext"
+		},
+		{
+			"name": "status",
+			"value": "backlog",
+			"type": "text"
+		},
+		{
+			"name": "store",
+			"value": "佐賀県立図書館",
+			"type": "text"
+		},
+		{
+			"name": "media",
+			"value": "book",
+			"type": "text"
+		},
+		{
+			"name": "著者",
+			"value": "{{selector:table.tbl-04 td a|slice:0,1}}",
+			"type": "multitext"
+		},
+		{
+			"name": "出版社",
+			"value": "{{selector:table.tbl-04 td|slice:3,4}}",
+			"type": "text"
+		},
+		{
+			"name": "出版日",
+			"value": "{{selector:table.tbl-04 td|slice:4,5}}",
+			"type": "text"
+		},
+		{
+			"name": "image",
+			"value": "https://www2.tosyo-saga.jp/{{selector:.lyt-image.report.state.hook-tag img?src}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://www2.tosyo-saga.jp/"
+	],
+	"noteNameFormat": "{{selector:table.tbl-04 td|slice:0,1}}",
+	"path": "Fleeting Notes"
+}

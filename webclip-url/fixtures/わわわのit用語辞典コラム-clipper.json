@@ -1,12 +1,12 @@
 {
 	"schemaVersion": "0.1.0",
-	"name": "Zenn",
+	"name": "わわわのIT用語辞典コラム",
 	"behavior": "create",
-	"noteContentFormat": "{{content}}",
+	"noteContentFormat": "{{selectorHtml:#main .article|markdown}}\n\n## Links\n\n- [元記事]({{url}})",
 	"properties": [
 		{
 			"name": "title",
-			"value": "{{title}}",
+			"value": "{{selector:article.article .h2c}}",
 			"type": "text"
 		},
 		{
@@ -16,7 +16,7 @@
 		},
 		{
 			"name": "author",
-			"value": "{{selector:article > aside > div > div > div >  a}}",
+			"value": "{{author|split:\\\", \\\"|wikilink|join}}",
 			"type": "multitext"
 		},
 		{
@@ -41,8 +41,9 @@
 		}
 	],
 	"triggers": [
-		"https://zenn.dev/*/articles/*"
+		"https://wa3.i-3-i.info/column*",
+		"https://wa3.i-3-i.info/"
 	],
-	"noteNameFormat": "{{title}}",
+	"noteNameFormat": "{{selector:article.article .h2c}}",
 	"path": "Literature Notes/raw/posts/"
 }

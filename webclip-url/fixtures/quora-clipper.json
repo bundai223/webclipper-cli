@@ -1,8 +1,8 @@
 {
 	"schemaVersion": "0.1.0",
-	"name": "Zenn",
+	"name": "Quora",
 	"behavior": "create",
-	"noteContentFormat": "{{content}}",
+	"noteContentFormat": "{{content}}\n\n## Links\n\n- [元記事]({{url}})",
 	"properties": [
 		{
 			"name": "title",
@@ -16,7 +16,7 @@
 		},
 		{
 			"name": "author",
-			"value": "{{selector:article > aside > div > div > div >  a}}",
+			"value": "{{author|split:\\\", \\\"|wikilink|join}}",
 			"type": "multitext"
 		},
 		{
@@ -41,7 +41,7 @@
 		}
 	],
 	"triggers": [
-		"https://zenn.dev/*/articles/*"
+		"https://*.quora.com/"
 	],
 	"noteNameFormat": "{{title}}",
 	"path": "Literature Notes/raw/posts/"

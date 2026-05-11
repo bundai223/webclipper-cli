@@ -1,0 +1,63 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Oreilly Learning Platform",
+	"behavior": "create",
+	"noteContentFormat": "[O'reilly]({{url}})\n\n![|300](https://learning.oreilly.com/{{selector:#content-panel img?src|first}})\n\n\n\n## メモ\n\n## 感想\n\n## Links\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{title}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{title}}を読む",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "book",
+			"type": "multitext"
+		},
+		{
+			"name": "status",
+			"value": "backlog",
+			"type": "text"
+		},
+		{
+			"name": "store",
+			"value": "oreilly",
+			"type": "text"
+		},
+		{
+			"name": "media",
+			"value": "app",
+			"type": "text"
+		},
+		{
+			"name": "著者",
+			"value": "{{selector:[class^='_contributors_']}}",
+			"type": "multitext"
+		},
+		{
+			"name": "出版社",
+			"value": "{{selector:a[href^='https://learning.oreilly.com/publisher/']}}",
+			"type": "text"
+		},
+		{
+			"name": "出版日",
+			"value": "{{selector:[class^=\\\"_statBlock\\\"] span|slice:-3,-2}}",
+			"type": "text"
+		},
+		{
+			"name": "image",
+			"value": "https://learning.oreilly.com/{{selector:#content-panel img?src|first}}",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://learning.oreilly.com/library/view/"
+	],
+	"noteNameFormat": "{{title}}",
+	"path": "Fleeting Notes"
+}

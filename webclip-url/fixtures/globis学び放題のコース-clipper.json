@@ -1,0 +1,28 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Globis学び放題のコース",
+	"behavior": "create",
+	"noteContentFormat": "- [Globisのコースのページ]({{url}})\n\n## メモ\n\n## Links\n\n- [Globisのコースのページ]({{url}})\n- [[Globis学び放題]]",
+	"properties": [
+		{
+			"name": "title",
+			"value": "Globis_{{selector:div[class$='__courseTitleArea'] h1}}",
+			"type": "text"
+		},
+		{
+			"name": "alias",
+			"value": "{{selector:div[class$='__courseTitleArea'] h1}}",
+			"type": "multitext"
+		},
+		{
+			"name": "tags",
+			"value": "globis",
+			"type": "multitext"
+		}
+	],
+	"triggers": [
+		"https://unlimited.globis.co.jp/ja/courses/"
+	],
+	"noteNameFormat": "Globis_{{selector:div[class$='__courseTitleArea'] h1}}",
+	"path": "Fleeting notes"
+}
